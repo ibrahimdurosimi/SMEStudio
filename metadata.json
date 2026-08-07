@@ -1,0 +1,6 @@
+{
+  "name": "SMEStudio",
+  "description": "AI-powered growth marketing agency for Nigerian & global SMEs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
