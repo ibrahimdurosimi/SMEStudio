@@ -1,20 +1,55 @@
+import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
+
+const phrases = [
+  { start: "zero", end: "hero." },
+  { start: "ideas", end: "product launch." },
+  { start: "low sales", end: "10x sales." },
+  { start: "concept", end: "market leader." },
+  { start: "stagnant", end: "scaling." }
+];
 
 export function Hero() {
   const { openLeadModal } = useTheme();
+  const [index, setIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % phrases.length);
+        setIsAnimating(false);
+      }, 400); // half of transition
+    }, 3500);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <section className="hero" id="top">
       <div className="wrap hero-grid">
         <div>
           <span className="eyebrow">AI-Powered Growth Marketing Agency</span>
-          <h1>We take digital brands from <em>zero</em> to hero.</h1>
+          <h1 style={{ minHeight: '3.15em', fontFamily: 'monospace', fontSize: '70px' }}>
+            We take digital brands from{' '}
+            <span 
+              style={{ 
+                opacity: isAnimating ? 0 : 1, 
+                transform: isAnimating ? 'translateY(10px)' : 'translateY(0)',
+                transition: 'all 0.4s ease',
+                display: 'inline-block'
+              }}
+            >
+              <em>{phrases[index].start}</em> to {phrases[index].end}
+            </span>
+          </h1>
           <p className="lead">SMEStudio blends a decade of hands-on growth marketing with AI-driven strategy, design, and build — so ambitious Nigerian and global brands stop guessing and start compounding.</p>
           <div className="btn-row">
             <a href="#" className="btn-primary" onClick={(e) => { e.preventDefault(); openLeadModal(); }}>Get your free proposal →</a>
             <a href="#solutions" className="btn-ghost">See solutions ↓</a>
           </div>
         </div>
+        
         <div className="hero-visual" aria-hidden="true">
           <svg viewBox="0 0 480 420">
             <path className="growth-path" d="M10 340 C 45 348, 80 332, 110 338 C 150 344, 165 320, 190 310 C 225 296, 245 250, 270 215 C 300 175, 325 130, 365 95 C 395 70, 420 48, 460 28" />

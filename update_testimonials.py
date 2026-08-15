@@ -1,18 +1,9 @@
-import { useRef } from 'react';
-import { useInView } from '../hooks/useInView';
+import re
 
-export function Testimonials() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { ref: headRef, isInView: headInView } = useInView();
-  const { ref: listRef, isInView: listInView } = useInView();
+with open('src/components/Testimonials.tsx', 'r') as f:
+    content = f.read()
 
-  const scrollTestimonials = (dir: number) => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: dir * 350, behavior: 'smooth' });
-    }
-  };
-
-    const testimonials = [
+testimonials_new = '''  const testimonials = [
     {
       quote: "SMEStudio completely overhauled our acquisition funnel. We went from guessing where our leads came from to having a predictable engine.",
       role: "CEO",
@@ -43,7 +34,7 @@ export function Testimonials() {
       industry: "Retail",
       location: "Accra",
       metric: "+180% Sales",
-      image: "https://images.unsplash.com/photo-1531123414780-f74242c2b052?auto=format&fit=crop&q=80&w=150"
+      image: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=150"
     },
     {
       quote: "Their automated sequences transformed our inactive mailing list into our highest converting channel.",
@@ -51,7 +42,7 @@ export function Testimonials() {
       industry: "SaaS",
       location: "Lagos",
       metric: "45% Open Rate",
-      image: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&q=80&w=150"
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
     },
     {
       quote: "Precise, data-driven, and relentlessly focused on revenue. We dropped our previous agency within two weeks of working with SMEStudio.",
@@ -61,20 +52,24 @@ export function Testimonials() {
       metric: "+300% Leads",
       image: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?auto=format&fit=crop&q=80&w=150"
     }
-  ];
+  ];'''
 
-  return (
-    <section id="testimonials" style={{ background: 'var(--paper-deep)' }}>
-      <div className="wrap">
-        <div ref={headRef} className={`section-head reveal ${headInView ? 'in' : ''}`}>
-          <span className="eyebrow">Client Results</span>
-          <h2>Results our clients actually feel.</h2>
-        </div>
-        
-        <div ref={listRef} className={`sol-scroll-wrap reveal ${listInView ? 'in' : ''}`}>
-          <div className="sol-scroll" ref={scrollRef}>
-            {testimonials.map((t, i) => (
-              <div key={i} className="test-card">
+content = re.sub(r'const testimonials = \[[^;]+\];', testimonials_new, content)
+
+card_old = '''              <div key={i} className="test-card">
+                <div className="test-quote-mark">“</div>
+                <p className="test-quote">{t.quote}</p>
+                <div className="test-meta">
+                  <span className="test-role">{t.role}</span>
+                  <span className="test-sep">/</span>
+                  <span className="test-industry">{t.industry}</span>
+                  <span className="test-sep">/</span>
+                  <span className="test-location">{t.location}</span>
+                </div>
+                <div className="test-metric">{t.metric}</div>
+              </div>'''
+
+card_new = '''              <div key={i} className="test-card">
                 <div className="test-quote-mark">“</div>
                 <p className="test-quote">{t.quote}</p>
                 <div className="test-meta-wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto' }}>
@@ -89,15 +84,10 @@ export function Testimonials() {
                   </div>
                   <div className="test-metric" style={{ marginLeft: 'auto', marginTop: 0 }}>{t.metric}</div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className="sol-nav">
-            <button onClick={() => scrollTestimonials(-1)} aria-label="Previous">←</button>
-            <button onClick={() => scrollTestimonials(1)} aria-label="Next">→</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+              </div>'''
+
+content = content.replace(card_old, card_new)
+
+with open('src/components/Testimonials.tsx', 'w') as f:
+    f.write(content)
+
